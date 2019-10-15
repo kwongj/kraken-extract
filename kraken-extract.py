@@ -43,20 +43,24 @@ with open(args.kraken) as k:
 
 # Read counter
 err('\nFound {} of {} reads.'.format(len(seqids), count))
-err('Writing to file ...')
 
 # Print reads to stdout where read ID matches reads of relevance
+count = 0
 try: 		# Handle gzipped reads
 	with gzip.open(args.reads, 'rt') as in_handle:
 		for title, seq, qual in FastqGeneralIterator(in_handle):
 			id = title.split()[0]
 			if id in seqids:
+				count += 1
+				err('Writing to file ... {}'.format(count), end='\r')
 				print("@%s\n%s\n+\n%s" % (title, seq, qual))
 except:		# Works for non-gzipped reads
 	with open(args.reads, 'r') as in_handle:
 		for title, seq, qual in FastqGeneralIterator(in_handle):
 			id = title.split()[0]
 			if id in seqids:
+				count += 1
+				err('Writing to file ... {}'.format(count), end='\r')
 				print("@%s\n%s\n+\n%s" % (title, seq, qual))
 
 # SLOW parse - not used
